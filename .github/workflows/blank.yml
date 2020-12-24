@@ -28,7 +28,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run pre-checks
         run: |
-          set -v
+          grep -c ^processor /proc/cpu/cpuinfo
+          printf "\n\n\n"
           sudo df -haT
           printf "\n\n\n"
           docker images -a
@@ -42,10 +43,10 @@ jobs:
           sudo du -sh /mnt/* 2>/dev/null || true
           sudo du -sh /* 2>/dev/null || true
           printf "\n\n\n"
+          if ! command -v apt; then sudo apt-get install -qy apt; fi
           sudo apt list --installed 2>/dev/null || true
           printf "\n\n\n"
           sudo dpkg -l 2>/dev/null
-          set +v
       - name: Cleanup
         run: |
           docker container prune -f
