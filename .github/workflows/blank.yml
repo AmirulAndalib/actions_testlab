@@ -1,66 +1,46 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
       - name: Run pre-checks
         run: |
-          grep -c ^processor /proc/cpuinfo
-          printf "\n\n\n"
           sudo df -haT
           printf "\n\n\n"
           docker images -a
           printf "\n\n\n"
           docker container ls -a -s
           printf "\n\n\n"
-          ls -lAog /opt/*
-          printf "\n\n\n"
-          du -sh /opt/* || true
+          du -sh /opt || true
           du -sh /home/* || true
-          du -sh /mnt/* || true
-          printf "\n\n\n"
+      - name: Apt list
+        run: |
           if ! command -v apt; then sudo apt-get install -qy apt; fi
-          sudo apt list --installed || true
-          printf "\n\n\n"
-          sudo dpkg -l 2>/dev/null
+          sudo apt list --installed 2>/dev/null
+      - name: Apt list 2
+        run: sudo dpkg -l 2>/dev/null
       - name: Cleanup
         run: |
           docker container prune -f
+          docker rmi -f `docker images -q`
           printf "\n\n\n"
-          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
-          printf "\n\n\n"
-          sudo apt-get -q -y remove account-plugin-facebook account-plugin-flickr account-plugin-jabber account-plugin-salut account-plugin-twitter account-plugin-windows-live account-plugin-yahoo aisleriot brltty duplicity empathy empathy-common example-content gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects gnomine landscape-common libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common mcp-account-manager-uoa python3-uno rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist sane-utils shotwell shotwell-common telepathy-gabble telepathy-haze telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 telepathy-salut totem totem-common totem-plugins printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix
+          sudo -E apt-get -q -y purge account-plugin-facebook account-plugin-flickr account-plugin-jabber account-plugin-salut account-plugin-twitter account-plugin-windows-live account-plugin-yahoo aisleriot brltty duplicity empathy empathy-common example-content gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects gnomine landscape-common libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common mcp-account-manager-uoa python3-uno rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist sane-utils shotwell shotwell-common telepathy-gabble telepathy-haze telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 telepathy-salut totem totem-common totem-plugins printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix
           printf "\n\n\n"
           sudo -E apt-get -q -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
           printf "\n\n\n"
-          sudo -E apt-get clean && sudo -E apt-get autoremove
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+          sudo -E apt-get clean
       - name: Post cleanup checks
-        run: |
-          sudo du -sh /* 2>/dev/null
-          printf "\n\n\n"
-          sudo apt list --installed 2>/dev/null
-          printf "\n\n\n"
-          sudo dpkg -l 2>/dev/null
+        run: du -sh /* 2>/dev/null
+      - name: Post Apt list
+        run: sudo apt list --installed 2>/dev/null
+      - name: Post Apt list 2
+        run: sudo dpkg -l 2>/dev/null
