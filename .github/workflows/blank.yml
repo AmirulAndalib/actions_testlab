@@ -40,6 +40,7 @@ jobs:
           sudo -E apt-get clean && sudo -E apt-get autoremove
       - name: Post cleanup checks
         run: |
+          sudo df -haT
           printf "\n\n\n"
           du -sh /opt/* 2>/dev/null || true
           du -sh /home/* 2>/dev/null || true
