@@ -28,17 +28,24 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run pre-checks
         run: |
+          set -v
           sudo df -haT
           printf "\n\n\n"
           docker images -a
           printf "\n\n\n"
           docker container ls -a -s
           printf "\n\n\n"
-          sudo du -sh /* 2>/dev/null
+          ls -lAog /* 2>/dev/null
           printf "\n\n\n"
-          sudo apt list --installed 2>/dev/null
+          sudo du -sh /opt/* 2>/dev/null || true
+          sudo du -sh /home/* 2>/dev/null || true
+          sudo du -sh /mnt/* 2>/dev/null || true
+          sudo du -sh /* 2>/dev/null || true
+          printf "\n\n\n"
+          sudo apt list --installed 2>/dev/null || true
           printf "\n\n\n"
           sudo dpkg -l 2>/dev/null
+          set +v
       - name: Cleanup
         run: |
           docker container prune -f
