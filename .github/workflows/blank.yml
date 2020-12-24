@@ -28,7 +28,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run pre-checks
         run: |
-          grep -c ^processor /proc/cpu/cpuinfo
+          grep -c ^processor /proc/cpuinfo
           printf "\n\n\n"
           sudo df -haT
           printf "\n\n\n"
@@ -38,13 +38,12 @@ jobs:
           printf "\n\n\n"
           ls -lAog /* 2>/dev/null
           printf "\n\n\n"
-          sudo du -sh /opt/* 2>/dev/null || true
-          sudo du -sh /home/* 2>/dev/null || true
-          sudo du -sh /mnt/* 2>/dev/null || true
-          sudo du -sh /* 2>/dev/null || true
+          sudo du -sh /opt/* || true
+          sudo du -sh /home/* || true
+          sudo du -sh /mnt/* || true
           printf "\n\n\n"
           if ! command -v apt; then sudo apt-get install -qy apt; fi
-          sudo apt list --installed 2>/dev/null || true
+          sudo apt list --installed || true
           printf "\n\n\n"
           sudo dpkg -l 2>/dev/null
       - name: Cleanup
