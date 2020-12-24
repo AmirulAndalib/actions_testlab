@@ -36,11 +36,11 @@ jobs:
           printf "\n\n\n"
           docker container ls -a -s
           printf "\n\n\n"
-          ls -lAog /* 2>/dev/null
+          ls -lAog /opt/*
           printf "\n\n\n"
-          sudo du -sh /opt/* || true
-          sudo du -sh /home/* || true
-          sudo du -sh /mnt/* || true
+          du -sh /opt/* || true
+          du -sh /home/* || true
+          du -sh /mnt/* || true
           printf "\n\n\n"
           if ! command -v apt; then sudo apt-get install -qy apt; fi
           sudo apt list --installed || true
