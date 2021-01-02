@@ -11,6 +11,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Pure Ubuntu Docker Checks
+        run: |
+          docker pull ubuntu:focal
+          docker run --privileged --rm -i ubuntu:focal bash << EOD
+            apt list --installed 2>/dev/null || true
+            dpkg -l 2>/dev/null || true
+          EOD
+
       - name: Run pre-checks
         run: |
           sudo df -haT
@@ -30,15 +38,15 @@ jobs:
           sudo apt list --installed 2>/dev/null
       - name: Apt list 2
         run: sudo dpkg -l 2>/dev/null
-      - uses: rokibhasansagar/actions_cleanup-ghactions@v1
-#      - name: Cleanup
-#        run: |
-#          docker rmi -f `docker images -q`
-#          printf "\n\n\n"
-#          sudo -E apt-get -q -y remove --purge aisleriot brltty duplicity empathy empathy-common example-content gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects landscape-common libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common python3-uno rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist sane-utils shotwell shotwell-common telepathy-gabble telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 totem totem-common totem-plugins printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php* heroku mono* libmono-* mongodb-* postgresql* bazel* firebird* man-db ruby* rake
-#          printf "\n\n\n"
-#          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
-#          sudo -E apt-get clean && sudo -E apt-get autoremove
+      #- uses: rokibhasansagar/actions_cleanup-ghactions@v1
+      - name: Cleanup
+        run: |
+          docker rmi -f `docker images -q`
+          printf "\n\n\n"
+          sudo -E apt-get -q -y remove --purge aisleriot brltty duplicity empathy empathy-common example-content gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects landscape-common libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common python3-uno rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist sane-utils shotwell shotwell-common telepathy-gabble telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 totem totem-common totem-plugins printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php* heroku mono* libmono-* mongodb-* postgresql* bazel* firebird* man-db ruby* rake
+          printf "\n\n\n"
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+          sudo -E apt-get clean && sudo -E apt-get autoremove
       - name: Post cleanup checks
         run: |
           sudo df -haT
