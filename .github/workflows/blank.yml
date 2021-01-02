@@ -11,13 +11,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Pure Ubuntu Docker Checks
-        run: |
-          docker pull ubuntu:focal
-          docker run --privileged --rm -i ubuntu:focal bash << EOD
-            apt list --installed 2>/dev/null || true
-          EOD
-
       - name: Run pre-checks
         run: |
           sudo df -haT
@@ -26,7 +19,10 @@ jobs:
           printf "\n\n\n"
           sudo ls -lAog /var/lib/docker/ 2>/dev/null
           printf "\n\n\n"
+          du -sh /opt/hostedtoolcache/* 2>/dev/null || true
           du -sh /opt/* 2>/dev/null || true
+          du -sh /home/linuxbrew/* 2>/dev/null || true
+          du -sh /home/runner/* 2>/dev/null || true
           du -sh /home/* 2>/dev/null || true
           du -sh /snap/* 2>/dev/null || true
           du -sh /usr/* 2>/dev/null || true
@@ -50,7 +46,10 @@ jobs:
         run: |
           sudo df -haT
           printf "\n\n\n"
+          du -sh /opt/hostedtoolcache/* 2>/dev/null || true
           du -sh /opt/* 2>/dev/null || true
+          du -sh /home/linuxbrew/* 2>/dev/null || true
+          du -sh /home/runner/* 2>/dev/null || true
           du -sh /home/* 2>/dev/null || true
           du -sh /snap/* 2>/dev/null || true
           du -sh /usr/* 2>/dev/null || true
