@@ -19,14 +19,17 @@ jobs:
           printf "\n\n\n"
           sudo ls -lAog /var/lib/docker/ 2>/dev/null
           printf "\n\n\n"
-          du -sh /opt/hostedtoolcache/* 2>/dev/null || true
+          printf "opt..\n"
+          du -sh /opt/hostedtoolcache/*/* 2>/dev/null || true
           du -sh /opt/* 2>/dev/null || true
+          printf "home..\n"
           du -sh /home/linuxbrew/* 2>/dev/null || true
           du -sh /home/runner/* 2>/dev/null || true
           du -sh /home/* 2>/dev/null || true
           du -sh /snap/* 2>/dev/null || true
           du -sh /usr/* 2>/dev/null || true
           du -sh /var/* 2>/dev/null || true
+          du -sh /mnt/* 2>/dev/null || true
       - name: Apt list
         run: |
           if ! command -v apt; then sudo apt-get install -qy apt; fi
@@ -46,14 +49,17 @@ jobs:
         run: |
           sudo df -haT
           printf "\n\n\n"
-          du -sh /opt/hostedtoolcache/* 2>/dev/null || true
+          printf "opt..\n"
+          du -sh /opt/hostedtoolcache/*/* 2>/dev/null || true
           du -sh /opt/* 2>/dev/null || true
+          printf "home..\n"
           du -sh /home/linuxbrew/* 2>/dev/null || true
           du -sh /home/runner/* 2>/dev/null || true
           du -sh /home/* 2>/dev/null || true
           du -sh /snap/* 2>/dev/null || true
           du -sh /usr/* 2>/dev/null || true
           du -sh /var/* 2>/dev/null || true
+          du -sh /mnt/* 2>/dev/null || true
       - name: Post Apt list
         run: sudo apt list --installed 2>/dev/null
       - name: Post Apt list 2
