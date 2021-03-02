@@ -10,57 +10,23 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
-
+      
       - name: Run pre-checks
         run: |
-          echo $PATH
-          printf "...\n\n"
-          df -hlT -t ext4
-          printf "\n\n\n"
-          docker images -a
-          printf "\n\n\n"
-          sudo ls -lAog /var/lib/docker/ 2>/dev/null
-          printf "\n\n\n"
-          printf "opt..\n"
-          du -sh /opt/hostedtoolcache/*/* 2>/dev/null || true
-          du -sh /opt/* 2>/dev/null || true
-          printf "home..\n"
-          du -sh /home/linuxbrew/* 2>/dev/null || true
-          du -sh /home/runner/* 2>/dev/null || true
-          du -sh /home/* 2>/dev/null || true
-          du -sh /snap/* 2>/dev/null || true
-          du -sh /usr/local/* 2>/dev/null || true
-          du -sh /var/* 2>/dev/null || true
+          printenv | sort
+
+      - uses: actions/checkout@v2
+
+      - name: Run post-checks
+        run: |
+          printenv | sort
+
       - name: Apt list
         run: |
-          if ! command -v apt; then sudo apt-get install -qy apt; fi
           sudo apt list --installed 2>/dev/null
-      #- uses: rokibhasansagar/slimhub_actions@main
-      - name: Cleanup
+
+      - uses: rokibhasansagar/slimhub_actions@main
+
+      - name: Run last-checks
         run: |
-          docker rmi -f `docker images -q`
-          printf "\n\n"
-          sudo -E apt-get -qy remove --purge adoptopenjdk-11-hotspot adoptopenjdk-8-hotspot adwaita-icon-theme aisleriot alsa-* ant ant-optional azure-cli bazel* brltty buildah byobu cabal-* clang-8 clang-9 clang-format-8 clang-format-9 cpp-7 cpp-8 dotnet* duplicity empathy empathy-common erlang* esl-erlang example-content firebird* firefox fontconfig* fonts-* g++-7 g++-8 gcc-7 gcc-8 gfortran* ghc* gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects google* groff-base gsfonts gtk-update-icon-cache heroku hhvm hicolor-icon-theme htop humanity-icon-theme imagemagick* info install-info irqbalance landscape-common libclang1-8 libclang-common-8-dev libmono-* libpython2* libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common lld-8 llvm-8* man-db manpages mercurial mercurial-common mongodb-* mono* msodbcsql* mssql-tools mysql* odbcinst* openjdk* php* plymouth plymouth-theme-ubuntu-text podman podman-plugins poppler-data popularity-contest postgresql* powershell printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix python2 python2-minimal python3-uno rake r-base-* r-cran-* rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist r-recommended ruby* sane-utils shotwell shotwell-common sound-theme-freedesktop subversion swig* telepathy-gabble telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 totem totem-common totem-plugins ubuntu-mono vim vim-runtime zulu*
-          printf "\n\n"
-          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d 2>/dev/null
-          sudo rm -rf -- /opt/hostedtoolcache/* ~/.julia ~/miniconda 2>/dev/null
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall.sh)"
-          sudo -E apt-get -qy clean && sudo -E apt-get -qy autoremove
-      - name: Post cleanup checks
-        run: |
-          echo $PATH
-          df -hlT -t ext4
-          printf "\n\n\n"
-          printf "opt..\n"
-          #du -sh /opt/hostedtoolcache/*/* 2>/dev/null || true
-          du -sh /opt/* 2>/dev/null || true
-          printf "home..\n"
-          du -sh /home/linuxbrew/*/* 2>/dev/null || true
-          du -sh /home/runner/* 2>/dev/null || true
-          du -sh /home/* 2>/dev/null || true
-          du -sh /snap/* 2>/dev/null || true
-          du -sh /usr/local/* 2>/dev/null || true
-          du -sh /var/* 2>/dev/null || true
-      - name: Post Apt list
-        run: sudo apt list --installed 2>/dev/null
+          printenv | sort
